@@ -3,6 +3,8 @@ const router = {
   "/": () => showContent("content-home"),
   "/profile": () =>
     requireAuth(() => showContent("content-profile"), "/profile"),
+  "/order-history": () =>
+    requireAuth(() => showContent("content-order-history"), "/order-history"),
   "/login": () => login()
 };
 
@@ -65,7 +67,6 @@ const updateUI = async () => {
 
       // save history to show it in separate view.
       const history = user['https://pizza42/claims/user_metadata'] ? user['https://pizza42/claims/user_metadata'].history : {};
-      console.log(`history ... ${JSON.stringify(history, null, 2)}`);
 
       // remove history from user profile view.
       delete user['https://pizza42/claims/user_metadata'];
@@ -76,7 +77,7 @@ const updateUI = async () => {
         2
       );
 
-      document.getElementById("order-history").innerText = JSON.stringify(
+      document.getElementById("user-order-history").innerText = JSON.stringify(
         history,
         null,
         2

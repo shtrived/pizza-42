@@ -13,6 +13,7 @@ const jsonwebtoken = require("jsonwebtoken");
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.static(join(__dirname, "public")));
+app.use(express.json({ limit: '1mb' }));
 
 // create the JWT middleware
 const checkJwt = jwt({
@@ -28,7 +29,26 @@ const checkJwt = jwt({
   algorithms: ["RS256"]
 });
 
-app.get("/place_order", checkJwt, (req, res) => {
+app.post("/place_order", checkJwt, (req, res) => {
+  const authorization_header = (req && req.headers && req.headers.authorization) ? req.headers.authorization : null;
+  const token = authorization_header.startsWith('Bearer ') ? authorization_header.split('Bearer ')[1] : authorization_header;
+
+  // Check for the scope in the token
+  const currentToken = jsonwebtoken.decode(token, { complete: true });
+  if (currentToken.payload.scope && (currentToken.payload.scope.indexOf('write:order') > -1)) {
+    res.send({
+      status: "Your order for pizza has been successfully placed!",
+      order: req.body
+    });
+  } else {
+    res.send({
+      status: "Client does not have right permissions to place order!"
+    });
+  }
+
+});
+
+app.get("/order_history", checkJwt, (req, res) => {
   const authorization_header = (req && req.headers && req.headers.authorization) ? req.headers.authorization : null;
   const token = authorization_header.startsWith('Bearer ') ? authorization_header.split('Bearer ')[1] : authorization_header;
 
@@ -44,6 +64,7 @@ app.get("/place_order", checkJwt, (req, res) => {
   }
 
 });
+
 
 app.get("/auth_config.json", (req, res) => {
   res.sendFile(join(__dirname, "auth_config.json"));

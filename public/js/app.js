@@ -43,33 +43,42 @@ const logout = () => {
 const orderApi = async () => {
   try {
 
-    // Validate if the user email id is verified
+    // Check if the user email id is verified before allowing to place an order
     const user = await auth0.getUser();
-    console.log(`user in orderapi ... ${JSON.stringify(user, null, 2)}`);
-    // Get the access token from the Auth0 client
-    const token = await auth0.getTokenSilently();
-
-    // Make the call to the API, setting the token
-    // in the Authorization header
 
     let responseData;
     if (user.email_verified) {
+      // Get the access token from the Auth0 client
+      const token = await auth0.getTokenSilently();
+
+      // Make the call to the place order API, setting the token
+      // in the Authorization header
+      const today = new Date(Date.now());
+      const body = {
+        order_date: today.toString(),
+        order_item: `Pizza # ${Math.floor((Math.random() * (43)) + 1)}`
+      }
+
       const response = await fetch("/place_order", {
+        method: 'post',
         headers: {
+          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
-        }
+        },
+        body: JSON.stringify(body),
+        json: true
       });
 
       // Fetch the JSON result
       responseData = await response.json();
     } else {
+      // If user email id is not verified do not place the order.
       responseData = { err: "Please verify your email before you can place order." }
     }
 
 
     // Display the result in the output element
     const responseElement = document.getElementById("api-call-result");
-
     responseElement.innerText = JSON.stringify(responseData, {}, 2);
 
   } catch (e) {
@@ -77,6 +86,15 @@ const orderApi = async () => {
     console.error(e);
   }
 };
+
+/**
+ * This method will update user's metadata with order history.
+ * @returns {Promise<void>}
+ */
+const updateUserMetaData = async () => {
+
+}
+
 
 /**
  * Retrieves the auth configuration from the server

@@ -96,6 +96,12 @@
                       <i class="fas fa-user mr-3"></i> Profile
                     </a>
                     <a
+                      href="/order-history"
+                      class="dropdown-item dropdown-profile route-link"
+                    >
+                      <i class="fas fa-user mr-3"></i> Order History
+                    </a>
+                    <a
                       href="#"
                       class="dropdown-item"
                       id="qsLogoutBtn"
@@ -196,14 +202,18 @@
               <pre class="rounded">
                 <code id="profile-data" class="json"></code></pre>
             </div>
+          </div>
+        </div>
 
-            <div class="row">
-              <h5> Your order history </h5>
+        <div class="page" id="content-order-history">
+          <div class="container">
+            <div class="row align-items-center">
+              <h6> Your order history </h6>
             </div>
 
             <div class="row">
               <pre class="rounded">
-                <code id="order-history" class="json"></code></pre>
+                <code id="user-order-history" class="json"></code></pre>
             </div>
 
           </div>
