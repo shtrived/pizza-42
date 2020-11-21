@@ -45,7 +45,6 @@ const orderApi = async () => {
 
     // Get the access token from the Auth0 client
     const token = await auth0.getTokenSilently();
-    console.log(`token ... ${token}`);
 
     // Make the call to the API, setting the token
     // in the Authorization header
@@ -84,7 +83,8 @@ const configureClient = async () => {
   auth0 = await createAuth0Client({
     domain: config.domain,
     client_id: config.clientId,
-    audience: config.audience
+    audience: config.audience,
+    scope: 'write:order'
   });
 };
 

@@ -8,6 +8,8 @@ const jwt = require("express-jwt");
 const jwksRsa = require("jwks-rsa");
 const authConfig = require("./auth_config.json");
 
+const jsonwebtoken = require("jsonwebtoken");
+
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(express.static(join(__dirname, "public")));
@@ -27,9 +29,22 @@ const checkJwt = jwt({
 });
 
 app.get("/place_order", checkJwt, (req, res) => {
-  res.send({
-    msg: "Your access token was successfully validated!"
-  });
+  // TODO: Check if user has verified email
+
+  const authorization_header = (req && req.headers && req.headers.authorization) ? req.headers.authorization : null;
+  const token = authorization_header.startsWith('Bearer ') ? authorization_header.split('Bearer ')[1] : authorization_header;
+
+  const currentToken = jsonwebtoken.decode(token, { complete: true });
+  if (currentToken.payload.scope && (currentToken.payload.scope.indexOf('write:order') > -1)) {
+    res.send({
+      msg: "Your order for pizza #" + Math.floor((Math.random() * (43)) + 1) + " has been successfully placed!"
+    });
+  } else {
+    res.send({
+      msg: "Client does not have right permissions to place order!"
+    });
+  }
+
 });
 
 app.get("/auth_config.json", (req, res) => {
