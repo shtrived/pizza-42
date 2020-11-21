@@ -43,19 +43,29 @@ const logout = () => {
 const orderApi = async () => {
   try {
 
+    // Validate if the user email id is verified
+    const user = await auth0.getUser();
+    console.log(`user in orderapi ... ${JSON.stringify(user, null, 2)}`);
     // Get the access token from the Auth0 client
     const token = await auth0.getTokenSilently();
 
     // Make the call to the API, setting the token
     // in the Authorization header
-    const response = await fetch("/place_order", {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
 
-    // Fetch the JSON result
-    const responseData = await response.json();
+    let responseData;
+    if (user.email_verified) {
+      const response = await fetch("/place_order", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // Fetch the JSON result
+      responseData = await response.json();
+    } else {
+      responseData = { err: "Please verify your email before you can place order." }
+    }
+
 
     // Display the result in the output element
     const responseElement = document.getElementById("api-call-result");

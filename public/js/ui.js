@@ -63,8 +63,21 @@ const updateUI = async () => {
     if (isAuthenticated) {
       const user = await auth0.getUser();
 
+      // save history to show it in separate view.
+      const history = user['https://pizza42/claims/user_metadata'] ? user['https://pizza42/claims/user_metadata'].history : {};
+      console.log(`history ... ${JSON.stringify(history, null, 2)}`);
+
+      // remove history from user profile view.
+      delete user['https://pizza42/claims/user_metadata'];
+
       document.getElementById("profile-data").innerText = JSON.stringify(
         user,
+        null,
+        2
+      );
+
+      document.getElementById("order-history").innerText = JSON.stringify(
+        history,
         null,
         2
       );

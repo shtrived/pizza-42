@@ -29,8 +29,6 @@ const checkJwt = jwt({
 });
 
 app.get("/place_order", checkJwt, (req, res) => {
-  // TODO: Check if user has verified email
-
   const authorization_header = (req && req.headers && req.headers.authorization) ? req.headers.authorization : null;
   const token = authorization_header.startsWith('Bearer ') ? authorization_header.split('Bearer ')[1] : authorization_header;
 
