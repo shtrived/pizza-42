@@ -12,11 +12,13 @@ const jsonwebtoken = require("jsonwebtoken");
 const axios = require("axios").default;
 
 // For accessing API Management APIs
-const config = require('./auth_config.json');
-const client_id = config.mgmt_clientId || process.env.mgmt_clientId;
-const client_secret = config.mgmt_clientSecret || process.env.mgmt_clientSecret;
-const domain = config.domain || process.env.domain;
+const client_id = authConfig.mgmt_clientId || process.env.mgmt_clientId;
+const client_secret = authConfig.mgmt_clientSecret || process.env.mgmt_clientSecret;
+const domain = authConfig.domain || process.env.domain;
+const app_audience = authConfig.audience || process.env.audience;
+
 const url = `https://${domain}/oauth/token`;
+
 
 app.use(morgan("dev"));
 app.use(helmet());
@@ -29,11 +31,11 @@ const checkJwt = jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: `https://${authConfig.domain}/.well-known/jwks.json`
+    jwksUri: `https://${domain}/.well-known/jwks.json`
   }),
 
-  audience: authConfig.audience,
-  issuer: `https://${authConfig.domain}/`,
+  audience: app_audience,
+  issuer: `https://${domain}/`,
   algorithms: ["RS256"]
 });
 
@@ -149,6 +151,10 @@ app.get("/order_history/:id", checkJwt, async (req, res) => {
 });
 
 app.get("/auth_config.json", (req, res) => {
+  res.sendFile(join(__dirname, "auth_config.json"));
+});
+
+app.get("/config", (req, res) => {
   res.sendFile(join(__dirname, "auth_config.json"));
 });
 

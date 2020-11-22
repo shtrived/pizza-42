@@ -1,4 +1,6 @@
 a0-variables.js
-auth_config.json
 node_modules/
 .idea/
+/auth_config_bak.json
+/build_env.sh
+/auth_config.json
