@@ -3,8 +3,8 @@ const router = {
   "/": () => showContent("content-home"),
   "/profile": () =>
     requireAuth(() => showContent("content-profile"), "/profile"),
-  "/order-history": () =>
-    requireAuth(() => showContent("content-order-history"), "/order-history"),
+  "/order_history": () =>
+    requireAuth(() => showContent("content-order-history"), "/order_history"),
   "/login": () => login()
 };
 
@@ -77,8 +77,19 @@ const updateUI = async () => {
         2
       );
 
+      // Update order view
+      const token = await auth0.getTokenSilently();
+      const orderResponse = await fetch(`/order_history/${user.sub}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      // Fetch the JSON result
+      const orderHistory = await orderResponse.json();
       document.getElementById("user-order-history").innerText = JSON.stringify(
-        history,
+        orderHistory,
         null,
         2
       );

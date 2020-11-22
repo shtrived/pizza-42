@@ -46,11 +46,11 @@ const orderApi = async () => {
     // Check if the user email id is verified before allowing to place an order
     const user = await auth0.getUser();
 
+    // Get the access token from the Auth0 client
+    const token = await auth0.getTokenSilently();
+
     let responseData;
     if (user.email_verified) {
-      // Get the access token from the Auth0 client
-      const token = await auth0.getTokenSilently();
-
       // Make the call to the place order API, setting the token
       // in the Authorization header
       const body = {
@@ -79,11 +79,13 @@ const orderApi = async () => {
     const responseElement = document.getElementById('api-call-result');
     responseElement.innerText = JSON.stringify(responseData, {}, 2);
 
+    updateUI();
   } catch (e) {
     // Display errors in the console
     console.error(e);
   }
 };
+
 
 /**
  * Retrieves the auth configuration from the server
