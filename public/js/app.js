@@ -6,7 +6,7 @@ let auth0 = null;
  */
 const login = async (targetUrl) => {
   try {
-    console.log("Logging in", targetUrl);
+    console.log('Logging in', targetUrl);
 
     const options = {
       redirect_uri: window.location.origin
@@ -18,7 +18,7 @@ const login = async (targetUrl) => {
 
     await auth0.loginWithRedirect(options);
   } catch (err) {
-    console.log("Log in failed", err);
+    console.log('Log in failed', err);
   }
 };
 
@@ -27,12 +27,12 @@ const login = async (targetUrl) => {
  */
 const logout = () => {
   try {
-    console.log("Logging out");
+    console.log('Logging out');
     auth0.logout({
       returnTo: window.location.origin
     });
   } catch (err) {
-    console.log("Log out failed", err);
+    console.log('Log out failed', err);
   }
 };
 
@@ -53,13 +53,11 @@ const orderApi = async () => {
 
       // Make the call to the place order API, setting the token
       // in the Authorization header
-      const today = new Date(Date.now());
       const body = {
-        order_date: today.toString(),
-        order_item: `Pizza # ${Math.floor((Math.random() * (43)) + 1)}`
+        user: user
       }
 
-      const response = await fetch("/place_order", {
+      const response = await fetch('/place_order', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
@@ -71,14 +69,14 @@ const orderApi = async () => {
 
       // Fetch the JSON result
       responseData = await response.json();
+
     } else {
       // If user email id is not verified do not place the order.
-      responseData = { err: "Please verify your email before you can place order." }
+      responseData = { err: 'Please verify your email before you can place order.' }
     }
 
-
     // Display the result in the output element
-    const responseElement = document.getElementById("api-call-result");
+    const responseElement = document.getElementById('api-call-result');
     responseElement.innerText = JSON.stringify(responseData, {}, 2);
 
   } catch (e) {
@@ -88,18 +86,9 @@ const orderApi = async () => {
 };
 
 /**
- * This method will update user's metadata with order history.
- * @returns {Promise<void>}
- */
-const updateUserMetaData = async () => {
-
-}
-
-
-/**
  * Retrieves the auth configuration from the server
  */
-const fetchAuthConfig = () => fetch("/auth_config.json");
+const fetchAuthConfig = () => fetch('/auth_config.json');
 
 /**
  * Initializes the Auth0 client
@@ -137,16 +126,16 @@ window.onload = async () => {
 
   // If unable to parse the history hash, default to the root URL
   if (!showContentFromUrl(window.location.pathname)) {
-    showContentFromUrl("/");
-    window.history.replaceState({ url: "/" }, {}, "/");
+    showContentFromUrl('/');
+    window.history.replaceState({ url: '/' }, {}, '/');
   }
 
-  const bodyElement = document.getElementsByTagName("body")[0];
+  const bodyElement = document.getElementsByTagName('body')[0];
 
   // Listen out for clicks on any hyperlink that navigates to a #/ URL
-  bodyElement.addEventListener("click", (e) => {
+  bodyElement.addEventListener('click', (e) => {
     if (isRouteLink(e.target)) {
-      const url = e.target.getAttribute("href");
+      const url = e.target.getAttribute('href');
 
       if (showContentFromUrl(url)) {
         e.preventDefault();
@@ -158,19 +147,19 @@ window.onload = async () => {
   const isAuthenticated = await auth0.isAuthenticated();
 
   if (isAuthenticated) {
-    console.log("> User is authenticated");
+    console.log('> User is authenticated');
     window.history.replaceState({}, document.title, window.location.pathname);
     updateUI();
     return;
   }
 
-  console.log("> User not authenticated");
+  console.log('> User not authenticated');
 
   const query = window.location.search;
-  const shouldParseResult = query.includes("code=") && query.includes("state=");
+  const shouldParseResult = query.includes('code=') && query.includes('state=');
 
   if (shouldParseResult) {
-    console.log("> Parsing redirect");
+    console.log('> Parsing redirect');
     try {
       const result = await auth0.handleRedirectCallback();
 
@@ -178,12 +167,12 @@ window.onload = async () => {
         showContentFromUrl(result.appState.targetUrl);
       }
 
-      console.log("Logged in!");
+      console.log('Logged in!');
     } catch (err) {
-      console.log("Error parsing redirect:", err);
+      console.log('Error parsing redirect:', err);
     }
 
-    window.history.replaceState({}, document.title, "/");
+    window.history.replaceState({}, document.title, '/');
   }
 
   updateUI();

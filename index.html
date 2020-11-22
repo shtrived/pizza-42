@@ -54,9 +54,6 @@
                 <li class="nav-item">
                   <a href="/" class="nav-link route-link">Home</a>
                 </li>
-                <!-- <li class="nav-item auth-visible">
-                  <button id="btn-place-order" onclick="orderApi()">Place Order</button>
-                </li> -->
               </ul>
               <ul class="navbar-nav d-none d-md-block">
                 <!-- Login button: show if NOT authenticated -->
@@ -175,12 +172,20 @@
               ingredients to provide you with the best and healthy choices of brick oven baked pizzas.
             </div>
 
-            <div class="text-center auth-visible hero">
-              <button id="btn-place-order" onclick="orderApi()">Place Order</button>
-              <!-- Add a container to hold the response from the call -->
-              <pre id="api-call-result"></pre>
-            </div>
           </div>
+
+          <p></p>
+          <div class="text-center auth-visible hero">
+            <button id="btn-place-order" onclick="orderApi()">Order Pizza</button>
+          </div>
+
+          <div class="auth-visible hero">
+            <!-- Add a container to hold the response from the call -->
+            <pre class="rounded">
+                <code id="api-call-result" class="json"></code>
+            </pre>
+          </div>
+
         </div>
 
         <div class="page" id="content-profile">
@@ -223,8 +228,7 @@
       <footer class="bg-light text-center p-5">
         <div class="logo"></div>
         <p>
-          Sample project provided by
-          <a href="https://auth0.com">Auth0</a>
+
         </p>
       </footer>
     </div>
