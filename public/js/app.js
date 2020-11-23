@@ -53,17 +53,13 @@ const orderApi = async () => {
     if (user.email_verified) {
       // Make the call to the place order API, setting the token
       // in the Authorization header
-      const body = {
-        user: user
-      }
 
-      const response = await fetch('/place_order', {
+      const response = await fetch(`/place_order/${user.sub}`, {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify(body),
         json: true
       });
 
