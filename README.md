@@ -1,4 +1,4 @@
-# Sample 01 - Login
+# Pizza - 42: Demo app for Auth0
 
 The purpose of this article is to demonstrate how simple it is to set up and use the new Single Page Application SDK, and authenticate a user in your application using Auth0's Universal Login Page.
 
@@ -12,8 +12,9 @@ To specify the application client ID and domain, make a copy of `auth_config.jso
 
 ```json
 {
-  "domain": "1701ncc.auth0.com",
-  "clientId": "CpLxBzGtGV96JAdqrGdsJ4eX8hZZRVKh"
+  "domain": "example.auth0.com",
+  "clientId": "...",
+  "audience": "..."
 }
 ```
 
@@ -34,6 +35,10 @@ This version of the application uses an [Express](https://expressjs.com) server 
 ```bash
 $ npm run dev
 ```
+
+## To try out the hosted sample
+
+You can try out this example at https://pizza-forty2.herokuapp.com
 
 ## Frequently Asked Questions
 
@@ -61,7 +66,7 @@ If you have found a bug or if you have a feature request, please report them at 
 
 ## Author
 
-[Auth0](auth0.com)
+[Siddharth Trivedi](shtrived@gmail.com)
 
 ## License
 
