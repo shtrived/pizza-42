@@ -53,18 +53,23 @@ const orderApi = async () => {
     if (user.email_verified) {
       // Make the call to the place order API, setting the token
       // in the Authorization header
-
       const response = await fetch(`/place_order/${user.sub}`, {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`
-        },
-        json: true
-      });
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          json: true
+        });
 
       // Fetch the JSON result
-      responseData = await response.json();
+      if (response.status === 403) {
+        responseData = {
+          status: 'Forbidden! Client does not have authorization to place order'
+        }
+      } else {
+        responseData = await response.json();
+      }
 
     } else {
       // If user email id is not verified do not place the order.
